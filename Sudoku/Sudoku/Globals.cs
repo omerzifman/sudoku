@@ -6,8 +6,15 @@ namespace Sudoku
 {
     public static class Globals
     {
-        public const int rows = 9; //board index is 0-8
-        public const int cols = 9; //board index is 0-8
-        public static int[,] board = new int[rows, cols];
+        public static int rows; //board index is 0-size
+        public static int cols; //board index is 0-size
+        public static int[,] board; //sudoku board
+
+        public static void InitGlobals(int size)
+        { //init size*size board
+            rows = size;
+            cols = size;
+            board = new int[rows, cols]; //init sudoku board for size*size
+        }
     }
 }
