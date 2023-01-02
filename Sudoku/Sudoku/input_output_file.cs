@@ -1,27 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.IO;
 
 namespace Sudoku
 {
-    public class input_output : Input_Output_Interface
+    public class input_output_file : Input_Output_Interface
     {
         public void getData() // can throw InvalidNumException, InvalidBoardException
-        { //inserts the inputed user board to globals.board
-            Console.WriteLine("Enter board:");
-            string strBoard = Console.ReadLine();
-            if (Math.Sqrt(strBoard.Length) % 1 != 0 && Math.Sqrt(Math.Sqrt(strBoard.Length)) % 1 != 0) // if board doesnt have boxes in it
+        { //inserts the board from sudokuBoard.txt to globals.board
+            Console.WriteLine("reading board...");
+            string strBoard = File.ReadAllText(@"C:\Users\User\Desktop\יג\אומגה\sudoku\Omer's Sudoku\sudoku\Sudoku\Sudoku\sudokuBoard.txt"); //read board from text file sudokuBoard.txt
+            if(Math.Sqrt(strBoard.Length) % 1 != 0 && Math.Sqrt(Math.Sqrt(strBoard.Length)) % 1 != 0) // if board doesnt have boxes in it
             {
                 InvalidBoardException invalidBoard = new InvalidBoardException();
                 throw invalidBoard;
             }
             Globals.InitGlobals((int)Math.Sqrt(strBoard.Length)); // init globals given board size
             int index = 0; //index for current char
-            for(int row = 0; row < Globals.rows; row++)
+            for (int row = 0; row < Globals.rows; row++)
             {
                 for (int col = 0; col < Globals.cols; col++)
                 {
-                    if(strBoard.Length <= index) // if user board is smaller then 9*9
+                    if (strBoard.Length <= index) // if user board is smaller then 9*9
                     {
                         InvalidBoardException invalidBoard = new InvalidBoardException();
                         throw invalidBoard;
@@ -62,5 +61,6 @@ namespace Sudoku
                 Console.WriteLine(); //print grid
             }
         }
+    
     }
 }
