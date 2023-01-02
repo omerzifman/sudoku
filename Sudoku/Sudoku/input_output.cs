@@ -10,6 +10,12 @@ namespace Sudoku
         { //inserts the inputed user board to globals.board
             Console.WriteLine("Enter board:");
             string strBoard = Console.ReadLine();
+            if (Math.Sqrt(strBoard.Length) % 1 != 0 && Math.Sqrt(Math.Sqrt(strBoard.Length)) % 1 != 0) // if board doesnt have boxes in it
+            {
+                InvalidBoardException invalidBoard = new InvalidBoardException();
+                throw invalidBoard;
+            }
+            Globals.InitGlobals((int)Math.Sqrt(strBoard.Length)); // init globals given board size
             int index = 0; //index for current char
             for(int row = 0; row < Globals.rows; row++)
             {
@@ -41,15 +47,19 @@ namespace Sudoku
 
         public void printData()
         { //prints globals.board
-            Console.WriteLine("___ ___ ___ ___ ___ ___ ___ ___ ___ "); //print grid
+            for (int row = 0; row < Globals.rows; row++)
+                Console.Write("___ ");
+            Console.WriteLine(); //print grid
             for (int row = 0; row < Globals.rows; row++)
             {
                 for (int col = 0; col < Globals.cols; col++)
                 {
-                    Console.Write(" " + Globals.board[row, col] + " |"); //print a cell
+                    Console.Write(" " + (char)(Globals.board[row, col] + '0') + " |"); //print a cell as a char
                 }
                 Console.WriteLine();
-                Console.WriteLine("___|___|___|___|___|___|___|___|___|"); //print grid
+                for (int col = 0; col < Globals.cols; col++)
+                    Console.Write("___ ");
+                Console.WriteLine(); //print grid
             }
         }
     }
