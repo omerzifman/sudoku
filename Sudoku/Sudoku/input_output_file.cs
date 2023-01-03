@@ -25,9 +25,9 @@ namespace Sudoku
                         InvalidBoardException invalidBoard = new InvalidBoardException();
                         throw invalidBoard;
                     }
-                    if (strBoard[index] - '0' >= 0 && strBoard[index] - '0' <= 9) //if char is a num
+                    if (strBoard[index] - '0' >= 0 && strBoard[index] - '0' <= Globals.rows) //if char is a num
                     {
-                        Globals.board[row, col] = strBoard[index] - '0'; //insert the board the current num
+                        Globals.board[row, col].value = strBoard[index] - '0'; //insert the board the current num
                         index += 1;
                     }
                     else // if char isnt a num
@@ -53,7 +53,7 @@ namespace Sudoku
             {
                 for (int col = 0; col < Globals.cols; col++)
                 {
-                    Console.Write(" " + (char)(Globals.board[row, col] + '0') + " |"); //print a cell as a char
+                    Console.Write(" " + (char)(Globals.board[row, col].value + '0') + " |"); //print a cell as a char
                 }
                 Console.WriteLine();
                 for (int col = 0; col < Globals.cols; col++)
