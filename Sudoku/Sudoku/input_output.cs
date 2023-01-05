@@ -26,7 +26,7 @@ namespace Sudoku
                         InvalidBoardException invalidBoard = new InvalidBoardException();
                         throw invalidBoard;
                     }
-                    if (strBoard[index] - '0' >= 0 && strBoard[index] - '0' <= Globals.rows) //if char is a num
+                    if (strBoard[index] >= '0' && strBoard[index] <= Globals.rows + '0') //if char is a num
                     {
                         if(strBoard[index] - '0' != 0)
                             Globals.board[row, col] = new cell(Globals.rows, strBoard[index] - '0', true); //insert the board the current num
