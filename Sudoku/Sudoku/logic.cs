@@ -176,5 +176,82 @@ namespace Sudoku
                 throw unsolvableBoard;
             }
         }
+
+
+        public static bool solveBitWise(cell[,] arr, int[] rows, int[] cols, int[,] grid, int i, int j)
+        { // solves the board and changes the given board. returns true if succeeded, else false
+            if (j == Globals.cols) 
+                return true; //if reached end of board
+
+            else if (i == Globals.rows)
+                return solveBitWise(arr, rows, cols, grid, 0, j + 1); //if reached end of column
+
+            if (arr[i, j].value != 0)
+                return solveBitWise(arr, rows, cols, grid, i + 1, j); //if the cell isnt empty(the cell is given in the original board)
+
+            for (int option = 0; option < Globals.rows; option++)
+            {
+                if(arr[i, j].possibilities[option] != 0) { 
+                    int digit = 1 << (option); //curront num mask
+                    if (!((rows[i] & digit) != 0 || //if num is leagal in current row
+                       (cols[j] & digit) != 0 || //if num is leagal in current row
+                       ((grid[i / Globals.sqrtSize, j / Globals.sqrtSize] & digit) != 0))) //if num is leagal in current box
+                    {
+                        arr[i, j].value = option+1; //insert the num to the board
+                        rows[i] |= digit; //make num invalid in current row
+                        cols[j] |= digit; //make num invalid in current column
+                        grid[i / Globals.sqrtSize, j / Globals.sqrtSize] |= digit; //make num invalid in current box
+                        if (solveBitWise(arr, rows, cols, grid, i + 1, j))
+                            return true; //continue solving the board
+                        // if the num in the current cell doesnt lead to a solved board
+                        rows[i] &= ~digit; //make num valid in current row
+                        cols[j] &= ~digit; //make num valid in current column
+                        grid[i / Globals.sqrtSize, j / Globals.sqrtSize] &= ~digit; //make num valid in current box
+                        arr[i, j].value = 0;
+                    }
+                }
+            }
+            return false; // if all nums doesnt result in a solved board - the current board isnt solvable
+        }
+
+        public static string callSolve()
+        { // creates arr helpers for the solving func, returns the solved board as a string or UnsolvableBoardException
+            int[] rows = new int[Globals.rows];
+            int[] cols = new int[Globals.cols];
+            int[,] grid = new int[Globals.sqrtSize, Globals.sqrtSize];
+
+            for (int i = 0; i < Globals.rows; i++)
+            {
+                for (int j = 0; j < Globals.cols; j++)
+                {
+                    int digit = Globals.board[i, j].value;
+                    if (digit != 0)
+                    {
+                        int value = 1 << (Globals.board[i,j].value - 1); //curront num mask
+                        rows[i] |= value; //make num invalid in current row
+                        cols[j] |= value; //make num invalid in current column
+                        grid[i / Globals.sqrtSize, j / Globals.sqrtSize] |= value; //make num invalid in current box
+                    }
+                }
+            }
+            Globals.board = build_possibles(Globals.board);
+            if (solveBitWise(Globals.board, rows, cols, grid, 0, 0))
+            { //return the solved board as a string
+                string boardStr = "";
+                for (int row = 0; row < Globals.rows; row++)
+                {
+                    for (int col = 0; col < Globals.cols; col++)
+                    {
+                        boardStr = boardStr + (char)(Globals.board[row, col].value + '0');
+                    }
+                }
+                return boardStr;
+            }
+            else
+            { //couldent solve board - throw UnsolvableBoardException
+                UnsolvableBoardException unsolvableBoard = new UnsolvableBoardException();
+                throw unsolvableBoard;
+            }
+        }
     }
 }
