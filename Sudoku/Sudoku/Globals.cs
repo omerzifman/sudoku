@@ -22,13 +22,33 @@ namespace Sudoku
     {
         public static int rows; //board index is 0-size
         public static int cols; //board index is 0-size
+        public static int sqrtSize; //box dize
         public static cell[,] board; //sudoku board
+        //public static int[,] board; //sudoku board
 
         public static void InitGlobals(int size)
         { //init size*size board
             rows = size;
             cols = size;
-            board = new cell[rows, cols]; //init sudoku board for size*size
+            sqrtSize = (int)Math.Sqrt(size);
+             board = new cell[rows, cols]; //init sudoku board for size*size
+            //board = new int[rows, cols]; //init sudoku board for size*size
+        }
+        public static cell[,] CloneBoard(cell[,] board)
+        {
+            cell[,] cloned = new cell[rows, cols];
+            for (int row = 0; row < rows; row++)
+            {
+                for (int col = 0; col < cols; col++)
+                {
+                    cloned[row, col] = new cell(rows, board[row, col].value, board[row, col].given);
+                    for (int index = 0; index < rows; index++)
+                    {
+                        cloned[row, col].possibilities[index] = board[row, col].possibilities[index];
+                    }
+                }
+            }
+            return cloned;
         }
     }
 }
